@@ -1,6 +1,2 @@
 .vs
 .pyc
-
-/TextEditor/*
-!/TextEditor/TextEditor
-!/TextEditor/TextEditor/*.sln
