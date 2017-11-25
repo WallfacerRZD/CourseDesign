@@ -1,7 +1,11 @@
 #include<iostream>
+#include<vector>
+#include<Windows.h>
+#include<string>
+#include"Editor.h"
 
 int main() {
-	std::cout << "git test";
-	getchar();
+	Editor editor;
+	editor.Start();
 	return 0;
 }
