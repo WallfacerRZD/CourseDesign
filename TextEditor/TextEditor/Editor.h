@@ -15,10 +15,10 @@ public:
 	void ReadFrom(const std::string &path);
 	void Start();
 	void Show() const;
-	void Delete(int index);
-	void Delete(int beginIndex, int endIndex);
+	void Delete(unsigned index);
 	void Add(const std::string &str);
-	void InsertInto(const std::string &str, int index);
+	void InsertInto(const std::string &str, unsigned index);
+	void Replace(const std::string &str, unsigned index);
 	void Save(const std::string &path) const;
 };
 

@@ -2,6 +2,8 @@
 
 #include<fstream>
 #include<iostream>
+#include<sstream>
+#include<iterator>
 using namespace std;
 
 Editor::Editor(): current(0) {}
@@ -35,7 +37,7 @@ void Editor::Show() const {
 	}
 }
 
-void Editor::Delete(int index) {
+void Editor::Delete(unsigned index) {
 	if (index < texts.size()) {
 		auto it = texts.cbegin();
 		for (int i = 0; i != index; ++i) {
@@ -49,27 +51,8 @@ void Editor::Delete(int index) {
 
 }
 
-void Editor::Delete(int beginIndex, int endIndex) {
-	if (beginIndex < texts.size()) {
-		auto bgIt = texts.cbegin();
-		for (int i = 0; i != beginIndex; ++i) {
-			++bgIt;
-		}
-		auto endIt = bgIt;
-		for (int i = 0, offset = endIndex - beginIndex; i < offset; ++i) {
-			if (endIt != texts.cend()) {
-				++endIt;
-			}
-		}
-		texts.erase(bgIt, endIt);
-	}
-	else {
-		//do something
-	}
 
-}
-
-void Editor::InsertInto(const string &str, int index) {
+void Editor::InsertInto(const string &str, unsigned index) {
 	if (index <= texts.size()) {
 		auto it = texts.cbegin();
 		for (int i = 0, size = texts.size(); i != index; ++i) {
@@ -87,11 +70,65 @@ void Editor::Save(const string &path) const {
 	out.close();
 }
 
+void Editor::Replace(const string &str, unsigned index) {
+	auto it = texts.begin();
+	for (int i = 0; i != index; ++i) {
+		++it;
+	}
+	*it = str;
+}
+
 void Editor::Start() {
+	system("cls");
+	Show();
 	string str;
-	while (getline(cin, str)) {
-		Add(str);
-		Show();
+	while(getline(cin, str)) {
+		// instruction
+		if (str[0] == ':') {
+			istringstream in(str);
+			string instruction;
+			in >> instruction;
+			in >> instruction;
+			if (instruction == "delete") {
+				int index = 0;
+				in >> index;
+				Delete(index);
+				Show();
+			}
+			else if (instruction == "insert") {
+				int index = 0;
+				string str;
+				in >> index;
+				getline(in, str);
+				InsertInto(str, index);
+				Show();
+			}
+			else if (instruction == "replace") {
+				int index = 0;
+				in >> index;
+				string str;
+				istream_iterator<char> in_it(in), eof;
+				// 流迭代器无视空格,去掉用于分割指令的空格
+				copy(in_it, eof, back_inserter(str));
+				Replace(str, index);
+				Show();
+			}
+			else if (instruction == "wq") {
+				string path = "./text.txt";
+				in >> path;
+				Save(path);
+				cout << "保存成功!" << endl;
+				return;
+			}
+			else {
+				cout << "无效的指令!!" << endl;
+			}
+		}
+		// text
+		else {
+			Add(str);
+			Show();
+		}
 	}
 }
 
