@@ -60,6 +60,9 @@ void Editor::InsertInto(const string &str, unsigned index) {
 		}
 		texts.insert(it, str);
 	}
+	else {
+		// do something
+	}
 }
 
 void Editor::Save(const string &path) const {
@@ -83,7 +86,7 @@ void Editor::Start() {
 	Show();
 	string str;
 	while(getline(cin, str)) {
-		// instruction
+		// is instruction
 		if (str[0] == ':') {
 			istringstream in(str);
 			string instruction;
@@ -114,6 +117,7 @@ void Editor::Start() {
 				Show();
 			}
 			else if (instruction == "wq") {
+				// 如果未指定,使用默认地址
 				string path = "./text.txt";
 				in >> path;
 				Save(path);
@@ -124,7 +128,7 @@ void Editor::Start() {
 				cout << "无效的指令!!" << endl;
 			}
 		}
-		// text
+		// is text
 		else {
 			Add(str);
 			Show();
