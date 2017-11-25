@@ -1,6 +1,5 @@
 #include<iostream>
 #include<vector>
-#include<Windows.h>
 #include<string>
 #include"Editor.h"
 #include<iostream>
