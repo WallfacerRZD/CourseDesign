@@ -102,7 +102,8 @@ void Editor::Start() {
 				int index = 0;
 				string str;
 				in >> index;
-				getline(in, str);
+				istream_iterator<char> in_it(in), eof;
+				copy(in_it, eof, back_inserter(str));
 				InsertInto(str, index);
 				Show();
 			}
