@@ -7,6 +7,11 @@
 
 using namespace std;
 
+struct MyComparison {
+	bool operator()(const Node *n1, const Node *n2) {
+		return n1->frequency > n2->frequency;
+	}
+};
 void HuffmanCompress::BuildTree(const string &path) {
 	// 统计字符频率
 	const int N = 256;
@@ -33,20 +38,25 @@ void HuffmanCompress::BuildTree(const string &path) {
 	}
 
 	// 构造哈夫曼树
-	priority_queue<Node> pq;
+	auto f = [](const Node *n1, const Node *n2) { return n1->frequency < n2->frequency; };
+	using MyPQ = priority_queue < const Node*, vector<const Node*>, MyComparison>;
+	MyPQ pq;
 	for (int i = 0; i < N; ++i) {
 		if (freq[i]) {
-			pq.push(Node((char)i, freq[i], nullptr, nullptr));
+			pq.push(new Node((char)i, freq[i], nullptr, nullptr));
 		}
 	}
-
+	cout << pq.size();
 	while (pq.size() > 1) {
-		Node node1 = pq.top();
+		const Node *node1 = pq.top();
 		pq.pop();
-		Node node2 = pq.top();
+		const Node *node2 = pq.top();
 		pq.pop();
-		Node newNode = Node('\0', node1.frequency + node2.frequency, node1)
+		const Node *newNode = new Node('\0', node1->frequency + node2->frequency, node1, node2);
+		cout << " " <<newNode->frequency;
+		pq.push(newNode);
 	}
+	root = pq.top();
 }
 
 HuffmanCompress::HuffmanCompress(const std::string &path) {

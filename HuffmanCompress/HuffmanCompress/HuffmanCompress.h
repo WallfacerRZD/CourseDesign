@@ -4,6 +4,8 @@
 
 #include"Node.h"
 #include<string>
+
+
 class Node;
 class HuffmanCompress {
 public:
@@ -14,7 +16,7 @@ private:
 	// ±‡“Î±Ì
 	std::string table[256];
 	// ≤È’“ ˜
-	Node *root;
+	const Node *root;
 	void BuildTree(const std::string &path);
 	void BuildTable();
 };
