@@ -15,7 +15,7 @@ private:
 	std::string table[256];
 	// ²éÕÒÊ÷
 	Node *root;
-	void BuildTree();
+	void BuildTree(const std::string &path);
 	void BuildTable();
 };
 
