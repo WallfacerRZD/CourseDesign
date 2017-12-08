@@ -17,6 +17,7 @@ private:
 	const std::string* BuildTable(const Node *root);
 	void BuildTable(std::string *table, const Node *node, const std::string &code);
 	const std::string* GetRawText(const std::string &path);
+	void WriteToFile(const std::string &path, const std::string *text, const std::string *table);
 };
 
 

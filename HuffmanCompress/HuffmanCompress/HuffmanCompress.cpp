@@ -22,17 +22,18 @@ const Node* HuffmanCompress::BuildTree(const string &path) {
 	}
 	ifstream in;
 	try {
-		in.open(path);
+		in.open(path, ifstream::in);
 	}
 	catch (...) {
 		cout << "文件打开失败!!" << endl;
+		in.close();
 		exit(1);
 	}
 	istreambuf_iterator<char> stream_it(in), eof;
 	while (stream_it != eof) {
 		++freq[*stream_it++];
 	}
-
+	in.close();
 	// 输出频率
 	cout << "---------频率-----------" << endl;
 	for (int i = 0; i < N; ++i) {
@@ -91,16 +92,57 @@ const std::string* HuffmanCompress::BuildTable(const Node *root) {
 const string* HuffmanCompress::GetRawText(const string &path) {
 	ifstream in;
 	try {
-		in.open(path);
+		in.open(path, ifstream::in);
 	}
 	catch (...) {
 		cout << "文件打开失败!";
+		in.close();
 		exit(1);
 	}
 	istreambuf_iterator<char> stream_it(in), eof;
 	string *text = new string();
 	copy(stream_it, eof, back_inserter(*text));
+	in.close();
 	return text;
+}
+
+
+void HuffmanCompress::WriteToFile(const string &path, const string *text, const string *table) {
+	ofstream out;
+	try {
+		out.open(path, ofstream::out | ofstream::binary);
+	}
+	catch (...) {
+		cout << "文件打开失败";
+		out.close();
+		exit(1);
+	}
+
+	// 压缩
+	unsigned char ch;
+	int shift_count = 0;
+	for (const char &c : *text) {
+		const string code = table[c];
+		for (const char &x : code) {
+			if (x == '1') {
+				// 与00000001或,最低位置1
+				ch |= 1;
+			}
+			// 左移一位
+			ch <<= 1;
+			++shift_count;
+			if (shift_count == 7) {
+				out << ch;
+				shift_count = 0;
+			}
+		}
+	}
+	if (shift_count > 1) {
+		ch <<= (8 - shift_count);
+		out << ch;
+	}
+	out.close();
+
 }
 
 void HuffmanCompress::Compress(const std::string &path) {
@@ -124,5 +166,6 @@ void HuffmanCompress::Compress(const std::string &path) {
 			}
 		}
 	}
-	cout << *text;
+	//cout << *text;
+	WriteToFile("a.txt", text, table);
 }

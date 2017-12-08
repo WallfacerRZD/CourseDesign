@@ -10,7 +10,7 @@
 using namespace std;
 int main() {
 	HuffmanCompress test;
-	test.Compress("text.txt");
+	test.Compress("b.txt");
 
 	getchar();
 	return 0;
