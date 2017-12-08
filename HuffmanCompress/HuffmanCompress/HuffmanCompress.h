@@ -9,16 +9,14 @@
 class Node;
 class HuffmanCompress {
 public:
-	void Compress();
+	void Compress(const std::string &path);
 	void Decompress();
-	HuffmanCompress(const std::string &path);
+	HuffmanCompress() = default;
 private:
-	// ±‡“Î±Ì
-	std::string table[256];
-	// ≤È’“ ˜
-	const Node *root;
-	void BuildTree(const std::string &path);
-	void BuildTable(const Node *node, const std::string &code);
+	const Node* BuildTree(const std::string &path);
+	const std::string* BuildTable(const Node *root);
+	void BuildTable(std::string *table, const Node *node, const std::string &code);
+	const std::string* GetRawText(const std::string &path);
 };
 
 

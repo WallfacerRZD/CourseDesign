@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iterator>
 #include<iostream>
+#include<algorithm>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ struct MyComparison {
 		return n1->frequency > n2->frequency;
 	}
 };
-void HuffmanCompress::BuildTree(const string &path) {
+const Node* HuffmanCompress::BuildTree(const string &path) {
 	// 统计字符频率
 	const int N = 256;
 	int freq[N];
@@ -31,6 +32,8 @@ void HuffmanCompress::BuildTree(const string &path) {
 	while (stream_it != eof) {
 		++freq[*stream_it++];
 	}
+
+	// 输出频率
 	cout << "---------频率-----------" << endl;
 	for (int i = 0; i < N; ++i) {
 		if (freq[i]) {
@@ -64,13 +67,49 @@ void HuffmanCompress::BuildTree(const string &path) {
 		const Node *newNode = new Node('\0', node1->frequency + node2->frequency, node1, node2);
 		pq.push(newNode);
 	}
-	root = pq.top();
+	return pq.top();
 }
 
-HuffmanCompress::HuffmanCompress(const std::string &path) {
-	BuildTree(path);
-	BuildTable(root, "");
+void HuffmanCompress::BuildTable(std::string *table, const Node *node, const std::string &code) {
+	if (node->IsLeaf()) {
+		table[node->ch] = code;
+		return;
+	}
+	else {
+		BuildTable(table, node->left, code + "0");
+		BuildTable(table, node->right, code + "1");
+	}
+}
+
+const std::string* HuffmanCompress::BuildTable(const Node *root) {
 	const int N = 256;
+	std::string *table = new std::string[N];
+	BuildTable(table, root, "");
+	return table;
+}
+
+const string* HuffmanCompress::GetRawText(const string &path) {
+	ifstream in;
+	try {
+		in.open(path);
+	}
+	catch (...) {
+		cout << "文件打开失败!";
+		exit(1);
+	}
+	istreambuf_iterator<char> stream_it(in), eof;
+	string *text = new string();
+	copy(stream_it, eof, back_inserter(*text));
+	return text;
+}
+
+void HuffmanCompress::Compress(const std::string &path) {
+	const string *text = GetRawText(path);
+	const Node *root = BuildTree(path);
+	const std::string *table = BuildTable(root);
+	const int N = 256;
+
+	// 输出编码
 	cout << "---------编码-----------" << endl;
 	for (int i = 0; i < N; ++i) {
 		if (table[i] != "") {
@@ -85,16 +124,5 @@ HuffmanCompress::HuffmanCompress(const std::string &path) {
 			}
 		}
 	}
-}
-
-
-void HuffmanCompress::BuildTable(const Node *node, const std::string &code) {
-	if (node->IsLeaf()) {
-		table[node->ch] = code;
-		return;
-	}
-	else {
-		BuildTable(node->left, code + "0");
-		BuildTable(node->right, code + "1");
-	}
+	cout << *text;
 }

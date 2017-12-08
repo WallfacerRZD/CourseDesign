@@ -5,9 +5,12 @@
 #include<vector>
 #include<fstream>
 #include<iterator>
+
+
 using namespace std;
 int main() {
-	HuffmanCompress test("text.txt");
+	HuffmanCompress test;
+	test.Compress("text.txt");
 
 	getchar();
 	return 0;
