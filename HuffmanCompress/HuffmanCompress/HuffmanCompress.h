@@ -18,7 +18,7 @@ private:
 	// ²éÕÒÊ÷
 	const Node *root;
 	void BuildTree(const std::string &path);
-	void BuildTable();
+	void BuildTable(const Node *node, const std::string &code);
 };
 
 

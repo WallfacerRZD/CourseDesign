@@ -31,14 +31,24 @@ void HuffmanCompress::BuildTree(const string &path) {
 	while (stream_it != eof) {
 		++freq[*stream_it++];
 	}
+	cout << "---------频率-----------" << endl;
 	for (int i = 0; i < N; ++i) {
 		if (freq[i]) {
-			cout << (char)i << ' ' << freq[i] << endl;
+			if (i == '\n') {
+				cout << "换行" << ": " << freq[i] << endl;
+			}
+			else if (i == ' ') {
+				cout << "空格" << ": " << freq[i] << endl;
+			}
+			else {
+				cout << (char)i << ' ' << freq[i] << endl;
+			}
 		}
 	}
 
 	// 构造哈夫曼树
-	auto f = [](const Node *n1, const Node *n2) { return n1->frequency < n2->frequency; };
+	//auto f = [](const Node *n1, const Node *n2) { return n1->frequency < n2->frequency; };
+	// 模板参数不能用lambda
 	using MyPQ = priority_queue < const Node*, vector<const Node*>, MyComparison>;
 	MyPQ pq;
 	for (int i = 0; i < N; ++i) {
@@ -46,14 +56,12 @@ void HuffmanCompress::BuildTree(const string &path) {
 			pq.push(new Node((char)i, freq[i], nullptr, nullptr));
 		}
 	}
-	cout << pq.size();
 	while (pq.size() > 1) {
 		const Node *node1 = pq.top();
 		pq.pop();
 		const Node *node2 = pq.top();
 		pq.pop();
 		const Node *newNode = new Node('\0', node1->frequency + node2->frequency, node1, node2);
-		cout << " " <<newNode->frequency;
 		pq.push(newNode);
 	}
 	root = pq.top();
@@ -61,8 +69,32 @@ void HuffmanCompress::BuildTree(const string &path) {
 
 HuffmanCompress::HuffmanCompress(const std::string &path) {
 	BuildTree(path);
+	BuildTable(root, "");
+	const int N = 256;
+	cout << "---------编码-----------" << endl;
+	for (int i = 0; i < N; ++i) {
+		if (table[i] != "") {
+			if (i == '\n') {
+				cout << "换行" << ": " << table[i] << endl;
+			}
+			else if (i == ' ') {
+				cout << "空格" << ": " << table[i] << endl;
+			}
+			else {
+				cout << char(i) << ": " << table[i] << endl;
+			}
+		}
+	}
 }
 
-void HuffmanCompress::BuildTable() {
-	return;
+
+void HuffmanCompress::BuildTable(const Node *node, const std::string &code) {
+	if (node->IsLeaf()) {
+		table[node->ch] = code;
+		return;
+	}
+	else {
+		BuildTable(node->left, code + "0");
+		BuildTable(node->right, code + "1");
+	}
 }
