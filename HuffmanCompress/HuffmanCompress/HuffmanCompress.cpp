@@ -109,34 +109,33 @@ const string* HuffmanCompress::GetRawText(const string &path) {
 	return text;
 }
 
-void HuffmanCompress::WriteTree(BinaryStdOut &stdbinary, const Node *node) {
+void HuffmanCompress::WriteTree(BinaryStdOut &stdbinaryout, const Node *node) {
 	if (node->IsLeaf()) {
-		stdbinary.WriteBit(true);
-		stdbinary.WriteChar(node->ch);
+		stdbinaryout.WriteBit(true);
+		stdbinaryout.WriteChar(node->ch);
 		return;
 	}
 	else {
-		stdbinary.WriteBit(false); 
-		WriteTree(stdbinary, node->left);
-		WriteTree(stdbinary, node->right);
+		stdbinaryout.WriteBit(false); 
+		WriteTree(stdbinaryout, node->left);
+		WriteTree(stdbinaryout, node->right);
 	}
-
 }
 
-void HuffmanCompress::WriteToFile(BinaryStdOut &stdbinary, const string *text, const string *table) {
+void HuffmanCompress::WriteToFile(BinaryStdOut &stdbinaryout, const string *text, const string *table) {
 	// 压缩
 	for (const char &c : *text) {
 		const string code = table[c];
 		for (const char &x : code) {
 			if (x == '1') {
-				stdbinary.WriteBit(true);
+				stdbinaryout.WriteBit(true);
 			}
 			else {
-				stdbinary.WriteBit(false);
+				stdbinaryout.WriteBit(false);
 			}
 		}
 	}
-	stdbinary.ClearBuffer();
+	stdbinaryout.ClearBuffer();
 }
 
 // 从比特流中重建单词查找树
@@ -209,10 +208,10 @@ void HuffmanCompress::Decompress(const std::string &path) {
 		const Node *p = root;
 		while (!p->IsLeaf()) {
 			if (binary_in.ReadBit()) {
-				p = p->right;
+				p = p->left;
 			}
 			else {
-				p = p->left;
+				p = p->right;
 			}
 		}
 		out << p->ch;

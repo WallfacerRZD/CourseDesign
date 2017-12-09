@@ -21,7 +21,7 @@ bool BinaryStdIn::ReadBit() {
 	return bit;
 }
 
-const char BinaryStdIn::ReadChar() {
+const unsigned char BinaryStdIn::ReadChar() {
 	if (N == 8) {
 		char ch = buffer;
 		//for (int i = 0; i < 8; ++i) {

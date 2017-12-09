@@ -22,8 +22,8 @@ private:
 	// buffer中剩余的比特位
 	int N;
 	//std::istream &in;
-	std::istreambuf_iterator<unsigned char> eof;
-	std::istreambuf_iterator<unsigned char> stream_it;
+	std::istreambuf_iterator<char> eof;
+	std::istreambuf_iterator<char> stream_it;
 };
 
 #endif
