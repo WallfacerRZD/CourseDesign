@@ -113,10 +113,12 @@
   <ItemGroup>
     <ClInclude Include="HuffmanCompress.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="StdBinary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HuffmanCompress.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StdBinary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Text.txt" />

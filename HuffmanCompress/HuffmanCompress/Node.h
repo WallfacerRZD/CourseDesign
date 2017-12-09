@@ -20,9 +20,6 @@ public:
 		return left == nullptr && right == nullptr;
 	}
 
-	bool operator<(const Node &rhs) const {
-		return frequency < rhs.frequency;
-	}
 private:
 	const Node *left, *right;
 	char ch;

@@ -1,4 +1,5 @@
 #include"HuffmanCompress.h"
+#include"StdBinary.h"
 #include<queue>
 #include<string>
 #include<fstream>
@@ -106,6 +107,23 @@ const string* HuffmanCompress::GetRawText(const string &path) {
 	return text;
 }
 
+void HuffmanCompress::WriteBit(std::ostream &out, unsigned char * buferr, bool bit) {
+
+}
+
+void HuffmanCompress::WriteTree(StdBinary &stdbinary, const Node *node) {
+	if (node->IsLeaf()) {
+		stdbinary.WriteBit(true);
+		stdbinary.WriteChar(node->ch);
+		return;
+	}
+	else {
+		stdbinary.WriteBit(false); 
+		WriteTree(stdbinary, node->left);
+		WriteTree(stdbinary, node->left);
+	}
+
+}
 
 void HuffmanCompress::WriteToFile(const string &path, const string *text, const string *table) {
 	ofstream out;
@@ -118,31 +136,35 @@ void HuffmanCompress::WriteToFile(const string &path, const string *text, const 
 		exit(1);
 	}
 
+
 	// 压缩
-	unsigned char ch;
-	int shift_count = 0;
+	StdBinary stdbinary(out);
 	for (const char &c : *text) {
 		const string code = table[c];
 		for (const char &x : code) {
 			if (x == '1') {
-				// 与00000001或,最低位置1
-				ch |= 1;
+				stdbinary.WriteBit(true);
 			}
-			// 左移一位
-			ch <<= 1;
-			++shift_count;
-			if (shift_count == 7) {
-				out << ch;
-				shift_count = 0;
+			else {
+				stdbinary.WriteBit(false);
 			}
 		}
 	}
-	if (shift_count > 1) {
-		ch <<= (8 - shift_count);
-		out << ch;
-	}
+	stdbinary.ClearBuffer();
 	out.close();
 
+}
+
+// 从比特流中重建单词查找树
+const Node* HuffmanCompress::ReadTree(StdBinary &stdbinary) {
+	// 叶子节点
+	if (stdbinary.ReadBit() == true) {
+		return new Node(stdbinary.ReadChar(), 0, nullptr, nullptr);
+	}
+	// 内部节点
+	else {
+		return new Node('\0', 0, ReadTree(stdbinary), ReadTree(stdbinary));
+	}
 }
 
 void HuffmanCompress::Compress(const std::string &path) {
@@ -166,7 +188,6 @@ void HuffmanCompress::Compress(const std::string &path) {
 			}
 		}
 	}
-	'';
 	//cout << *text;
-	WriteToFile("a.txt", text, table);
+	WriteToFile("c.txt", text, table);
 }
