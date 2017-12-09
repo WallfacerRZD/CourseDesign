@@ -107,11 +107,7 @@ const string* HuffmanCompress::GetRawText(const string &path) {
 	return text;
 }
 
-void HuffmanCompress::WriteBit(std::ostream &out, unsigned char * buferr, bool bit) {
-
-}
-
-void HuffmanCompress::WriteTree(StdBinary &stdbinary, const Node *node) {
+void HuffmanCompress::WriteTree(BinaryStdOut &stdbinary, const Node *node) {
 	if (node->IsLeaf()) {
 		stdbinary.WriteBit(true);
 		stdbinary.WriteChar(node->ch);
@@ -120,25 +116,13 @@ void HuffmanCompress::WriteTree(StdBinary &stdbinary, const Node *node) {
 	else {
 		stdbinary.WriteBit(false); 
 		WriteTree(stdbinary, node->left);
-		WriteTree(stdbinary, node->left);
+		WriteTree(stdbinary, node->right);
 	}
 
 }
 
-void HuffmanCompress::WriteToFile(const string &path, const string *text, const string *table) {
-	ofstream out;
-	try {
-		out.open(path, ofstream::out | ofstream::binary);
-	}
-	catch (...) {
-		cout << "文件打开失败";
-		out.close();
-		exit(1);
-	}
-
-
+void HuffmanCompress::WriteToFile(BinaryStdOut &stdbinary, const string *text, const string *table) {
 	// 压缩
-	StdBinary stdbinary(out);
 	for (const char &c : *text) {
 		const string code = table[c];
 		for (const char &x : code) {
@@ -151,17 +135,15 @@ void HuffmanCompress::WriteToFile(const string &path, const string *text, const 
 		}
 	}
 	stdbinary.ClearBuffer();
-	out.close();
-
 }
 
 // 从比特流中重建单词查找树
-const Node* HuffmanCompress::ReadTree(StdBinary &stdbinary) {
-	// 叶子节点
+const Node* HuffmanCompress::ReadTree(StdBinaryIn &stdbinaryin) {
+	 //叶子节点
 	if (stdbinary.ReadBit() == true) {
 		return new Node(stdbinary.ReadChar(), 0, nullptr, nullptr);
 	}
-	// 内部节点
+	 //内部节点
 	else {
 		return new Node('\0', 0, ReadTree(stdbinary), ReadTree(stdbinary));
 	}
@@ -170,7 +152,7 @@ const Node* HuffmanCompress::ReadTree(StdBinary &stdbinary) {
 void HuffmanCompress::Compress(const std::string &path) {
 	const string *text = GetRawText(path);
 	const Node *root = BuildTree(path);
-	const std::string *table = BuildTable(root);
+	const string *table = BuildTable(root);
 	const int N = 256;
 
 	// 输出编码
@@ -188,6 +170,15 @@ void HuffmanCompress::Compress(const std::string &path) {
 			}
 		}
 	}
-	//cout << *text;
-	WriteToFile("c.txt", text, table);
+
+
+	//输出到文件
+	const string file_name = "c.txt";
+	ofstream out(file_name, ofstream::out);
+	BinaryStdOut stdbinaryin(out);
+	//WriteToFile(stdbinary, text, table);
+	WriteTree(stdbinaryin, root);
+	WriteToFile(stdbinaryin, text, table);
+	std::cout << "压缩完成!" << std::endl;
+	out.close();
 }

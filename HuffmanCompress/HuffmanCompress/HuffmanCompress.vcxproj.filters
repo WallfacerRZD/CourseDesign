@@ -21,7 +21,10 @@
     <ClInclude Include="Node.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="StdBinary.h">
+    <ClInclude Include="BinaryStdIn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryStdOut.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,6 +36,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StdBinary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryStdIn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

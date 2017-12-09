@@ -111,11 +111,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryStdIn.h" />
     <ClInclude Include="HuffmanCompress.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="StdBinary.h" />
+    <ClInclude Include="BinaryStdOut.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryStdIn.cpp" />
     <ClCompile Include="HuffmanCompress.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StdBinary.cpp" />

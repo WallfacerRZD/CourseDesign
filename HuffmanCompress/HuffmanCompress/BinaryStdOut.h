@@ -4,12 +4,12 @@
 
 #include<fstream>
 
-
-class StdBinary {
+class BinaryStdOut {
 public:
-	StdBinary(std::ostream &out) :shift_count(0), buffer(char(0x00)), out(out)
+	BinaryStdOut(std::ostream &out) :shift_count(0), buffer(char(0x00)), out(out)
 	{};
 	void WriteBit(bool bit);
+	void WriteChar(const char ch);
 	void ClearBuffer();
 	bool ReadBit();
 	char ReadChar();
