@@ -120,7 +120,7 @@
     <ClCompile Include="BinaryStdIn.cpp" />
     <ClCompile Include="HuffmanCompress.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="StdBinary.cpp" />
+    <ClCompile Include="BinaryStdOut.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Text.txt" />

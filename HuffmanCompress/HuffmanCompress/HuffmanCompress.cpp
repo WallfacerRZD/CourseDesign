@@ -1,5 +1,5 @@
 #include"HuffmanCompress.h"
-#include"StdBinary.h"
+#include"BinaryStdOut.h"
 #include<queue>
 #include<string>
 #include<fstream>
@@ -30,26 +30,28 @@ const Node* HuffmanCompress::BuildTree(const string &path) {
 		in.close();
 		exit(1);
 	}
+
+
 	istreambuf_iterator<char> stream_it(in), eof;
 	while (stream_it != eof) {
 		++freq[*stream_it++];
 	}
 	in.close();
 	// 输出频率
-	cout << "---------频率-----------" << endl;
-	for (int i = 0; i < N; ++i) {
-		if (freq[i]) {
-			if (i == '\n') {
-				cout << "换行" << ": " << freq[i] << endl;
-			}
-			else if (i == ' ') {
-				cout << "空格" << ": " << freq[i] << endl;
-			}
-			else {
-				cout << (char)i << ' ' << freq[i] << endl;
-			}
-		}
-	}
+	//cout << "---------频率-----------" << endl;
+	//for (int i = 0; i < N; ++i) {
+	//	if (freq[i]) {
+	//		if (i == '\n') {
+	//			cout << "换行" << ": " << freq[i] << endl;
+	//		}
+	//		else if (i == ' ') {
+	//			cout << "空格" << ": " << freq[i] << endl;
+	//		}
+	//		else {
+	//			cout << (char)i << ' ' << freq[i] << endl;
+	//		}
+	//	}
+	//}
 
 	// 构造哈夫曼树
 	//auto f = [](const Node *n1, const Node *n2) { return n1->frequency < n2->frequency; };
@@ -138,47 +140,92 @@ void HuffmanCompress::WriteToFile(BinaryStdOut &stdbinary, const string *text, c
 }
 
 // 从比特流中重建单词查找树
-const Node* HuffmanCompress::ReadTree(StdBinaryIn &stdbinaryin) {
+const Node* HuffmanCompress::ReadTree(BinaryStdIn &binary_in) {
 	 //叶子节点
-	if (stdbinary.ReadBit() == true) {
-		return new Node(stdbinary.ReadChar(), 0, nullptr, nullptr);
+	if (binary_in.ReadBit() == true) {
+		return new Node(binary_in.ReadChar(), 0, nullptr, nullptr);
 	}
 	 //内部节点
 	else {
-		return new Node('\0', 0, ReadTree(stdbinary), ReadTree(stdbinary));
+		return new Node('\0', 0, ReadTree(binary_in), ReadTree(binary_in));
 	}
 }
 
 void HuffmanCompress::Compress(const std::string &path) {
 	const string *text = GetRawText(path);
 	const Node *root = BuildTree(path);
+
+	cout << "-------------tree-----------------" << endl;
+	ShowTree(root);
+	cout << "-------------tree-----------------" << endl;
 	const string *table = BuildTable(root);
 	const int N = 256;
 
 	// 输出编码
-	cout << "---------编码-----------" << endl;
-	for (int i = 0; i < N; ++i) {
-		if (table[i] != "") {
-			if (i == '\n') {
-				cout << "换行" << ": " << table[i] << endl;
-			}
-			else if (i == ' ') {
-				cout << "空格" << ": " << table[i] << endl;
-			}
-			else {
-				cout << char(i) << ": " << table[i] << endl;
-			}
-		}
-	}
+	//cout << "---------编码-----------" << endl;
+	//for (int i = 0; i < N; ++i) {
+	//	if (table[i] != "") {
+	//		if (i == '\n') {
+	//			cout << "换行" << ": " << table[i] << endl;
+	//		}
+	//		else if (i == ' ') {
+	//			cout << "空格" << ": " << table[i] << endl;
+	//		}
+	//		else {
+	//			cout << char(i) << ": " << table[i] << endl;
+	//		}
+	//	}
+	//}
+	//cout << "---------编码-----------" << endl;
 
 
 	//输出到文件
-	const string file_name = "c.txt";
+	const string file_name = "out.dat";
 	ofstream out(file_name, ofstream::out);
-	BinaryStdOut stdbinaryin(out);
-	//WriteToFile(stdbinary, text, table);
-	WriteTree(stdbinaryin, root);
-	WriteToFile(stdbinaryin, text, table);
+	BinaryStdOut stdbinaryout(out);
+
+	WriteTree(stdbinaryout, root);
+
+	//stdbinaryout.WriteInt(text->size());
+
+	WriteToFile(stdbinaryout, text, table);
 	std::cout << "压缩完成!" << std::endl;
 	out.close();
+}
+
+void HuffmanCompress::Decompress(const std::string &path) {
+	ifstream in(path, ifstream::in);
+	BinaryStdIn binary_in(in);
+	ofstream out("x.txt", ofstream::out);
+	const Node *root = ReadTree(binary_in);
+
+	cout << "-------------tree-----------------" << endl;
+	ShowTree(root);
+	cout << "-------------tree-----------------" << endl;
+	//const int N = binary_in.ReadInt();
+	//cout << endl
+	//	<< N;
+	while (!binary_in.IsEmpty()) {
+		const Node *p = root;
+		while (!p->IsLeaf()) {
+			if (binary_in.ReadBit()) {
+				p = p->right;
+			}
+			else {
+				p = p->left;
+			}
+		}
+		out << p->ch;
+	}
+	
+}
+
+void HuffmanCompress::ShowTree(const Node* root)const {
+	if (root->IsLeaf()) {
+		cout << root->ch << " ";
+	}
+	else {
+		ShowTree(root->left);
+		ShowTree(root->right);
+	}
 }

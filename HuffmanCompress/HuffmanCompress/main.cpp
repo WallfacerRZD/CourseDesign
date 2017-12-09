@@ -11,7 +11,7 @@ using namespace std;
 int main() {
 	HuffmanCompress test;
 	test.Compress("text.txt");
-	test.Decompress("a.txt");
+	test.Decompress("out.dat");
 	getchar();
 	return 0;
 }

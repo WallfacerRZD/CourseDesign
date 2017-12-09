@@ -35,10 +35,10 @@
     <ClCompile Include="HuffmanCompress.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="StdBinary.cpp">
+    <ClCompile Include="BinaryStdIn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryStdIn.cpp">
+    <ClCompile Include="BinaryStdOut.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

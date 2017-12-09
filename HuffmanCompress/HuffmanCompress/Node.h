@@ -22,7 +22,7 @@ public:
 
 private:
 	const Node *left, *right;
-	char ch;
+	unsigned char ch;
 	int frequency;
 };
 

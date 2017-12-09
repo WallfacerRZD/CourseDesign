@@ -6,15 +6,14 @@
 
 class BinaryStdOut {
 public:
-	BinaryStdOut(std::ostream &out) :shift_count(0), buffer(char(0x00)), out(out)
+	BinaryStdOut(std::ostream &out) :N(0), buffer(unsigned char(0x00)), out(out)
 	{};
 	void WriteBit(bool bit);
-	void WriteChar(const char ch);
+	void WriteChar(const unsigned char ch);
+	void WriteInt(int x);
 	void ClearBuffer();
-	bool ReadBit();
-	char ReadChar();
 private:
-	int shift_count;
+	int N;
 	unsigned char buffer;
 	std::ostream &out;
 

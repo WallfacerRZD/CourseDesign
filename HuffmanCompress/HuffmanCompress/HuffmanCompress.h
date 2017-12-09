@@ -21,7 +21,8 @@ private:
 	const std::string* GetRawText(const std::string &path);
 	void WriteTree(BinaryStdOut &binarystdout, const Node *node);
 	void WriteToFile(BinaryStdOut &binarystdout, const std::string *text, const std::string *table);
-	const Node* ReadTree(StdBinaryIn &stdbinaryin)
+	const Node* ReadTree(BinaryStdIn &stdbinaryin);
+	void ShowTree(const Node* root)const;
 };
 
 
