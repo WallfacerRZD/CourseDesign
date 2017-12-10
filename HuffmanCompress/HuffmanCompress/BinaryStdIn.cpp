@@ -2,9 +2,14 @@
 #include<iostream>
 #include<iterator>
 void BinaryStdIn::FillBuffer() {
-	buffer = *stream_it;
-	++stream_it;
-	N = 8;
+	if (!IsEmpty()) {
+		buffer = *stream_it;
+		++stream_it;
+		N = 8;
+	}
+	else {
+		buffer = 0;
+	}
 }
 
 bool BinaryStdIn::IsEmpty() {

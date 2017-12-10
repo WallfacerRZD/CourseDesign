@@ -12,7 +12,7 @@ void BinaryStdOut::WriteBit(bool bit) {
 	}
 }
 
-void BinaryStdOut::WriteInt(int x) {
+void BinaryStdOut::WriteInt(const int x) {
 	WriteChar((x >> 24) & 0xff);
 	WriteChar((x >> 16) & 0xff);
 	WriteChar((x >> 8) & 0xff);
@@ -34,9 +34,6 @@ void BinaryStdOut::ClearBuffer() {
 void BinaryStdOut::WriteChar(const unsigned char ch) {
 	if (N == 0) {
 		out << ch;
-		for (int i = 0; i < 8; ++i) {
-			bool bit = ((ch >> (8 - i - 1)) & 1) == 1;
-		}
 	}
 	else {
 		for (int i = 0; i < 8; ++i) {

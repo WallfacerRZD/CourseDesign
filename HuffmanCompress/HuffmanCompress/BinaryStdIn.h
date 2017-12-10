@@ -6,8 +6,7 @@
 
 class BinaryStdIn {
 public:
-	BinaryStdIn(std::istream &in):buffer(unsigned char(0x00)), N(8), stream_it(in)
-	{
+	BinaryStdIn(std::istream &in) :buffer(unsigned char(0x00)), N(8), stream_it(in) {
 		
 		FillBuffer();
 	}

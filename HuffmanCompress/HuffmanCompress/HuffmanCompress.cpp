@@ -63,6 +63,7 @@ const Node* HuffmanCompress::BuildTree(const string &path) {
 			pq.push(new Node((char)i, freq[i], nullptr, nullptr));
 		}
 	}
+
 	while (pq.size() > 1) {
 		const Node *node1 = pq.top();
 		pq.pop();
@@ -151,12 +152,13 @@ const Node* HuffmanCompress::ReadTree(BinaryStdIn &binary_in) {
 }
 
 void HuffmanCompress::Compress(const std::string &path) {
+	cout << "compress begin..." << endl;
 	const string *text = GetRawText(path);
 	const Node *root = BuildTree(path);
 
-	cout << "-------------tree-----------------" << endl;
-	ShowTree(root);
-	cout << "-------------tree-----------------" << endl;
+	//cout << "-------------tree-----------------" << endl;
+	//ShowTree(root);
+	//cout << "-------------tree-----------------" << endl;
 	const string *table = BuildTable(root);
 	const int N = 256;
 
@@ -188,25 +190,36 @@ void HuffmanCompress::Compress(const std::string &path) {
 	//stdbinaryout.WriteInt(text->size());
 
 	WriteToFile(stdbinaryout, text, table);
-	std::cout << "Ñ¹ËõÍê³É!" << std::endl;
+	std::cout << "compress end..." << std::endl;
 	out.close();
 }
 
 void HuffmanCompress::Decompress(const std::string &path) {
 	ifstream in(path, ifstream::in);
 	BinaryStdIn binary_in(in);
-	ofstream out("x.txt", ofstream::out);
+	ofstream out("depressed from out.txt", ofstream::out);
+	cout << "decompress begin..." << endl;
 	const Node *root = ReadTree(binary_in);
 
-	cout << "-------------tree-----------------" << endl;
-	ShowTree(root);
-	cout << "-------------tree-----------------" << endl;
-	//const int N = binary_in.ReadInt();
-	//cout << endl
-	//	<< N;
+
+	//const unsigned int N = binary_in.ReadInt();
+	//cout << N;
+	//for (int i = 0; i < 2000; ++i) {
+	//	const Node *p = root;
+	//	while (!binary_in.IsEmpty() && !p->IsLeaf()) {
+	//		if (binary_in.ReadBit()) {
+	//			p = p->left;
+	//		}
+	//		else {
+	//			p = p->right;
+	//		}
+	//	}
+	//	out << p->ch;
+	//}
+
 	while (!binary_in.IsEmpty()) {
 		const Node *p = root;
-		while (!p->IsLeaf()) {
+		while (!binary_in.IsEmpty() && !p->IsLeaf()) {
 			if (binary_in.ReadBit()) {
 				p = p->left;
 			}
@@ -216,6 +229,8 @@ void HuffmanCompress::Decompress(const std::string &path) {
 		}
 		out << p->ch;
 	}
+	out.close();
+	cout << "decompress end..." << endl;
 	
 }
 
