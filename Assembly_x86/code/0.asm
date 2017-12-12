@@ -1,51 +1,47 @@
 ;内中断
-assume cs: codeseg
 
-codeseg segment
-start: mov ax, cs
-       mov ds, ax
-       mov ax, 0H
-       mov es, ax
-       mov di, 200H
-       mov si, offset do0
-       mov cx, offset do0end - offset do0
+assume cs:code, ds:data
 
-       cld
-       rep movsb
+data segment
+        string db 'divide error!$'
+data ends
 
-       mov ax, 0
-       mov es, ax
-       mov word ptr es:[0*4], 200H
-       mov word ptr es:[0*4+2], 0
-
-       mov ax, 4c00h
-       int 21h
-
-do0: jmp short do0start
-     db "overflow!"
-
-do0start:
+code segment
+start:
+        ;设置中断处理程序
+        mov ax, 0
+        mov es, ax
         mov ax, cs
         mov ds, ax
-        mov si, 202h
 
-        mov ax, 0b800h
+        mov di, 0200H
+        mov si, offset show_str
+        mov cx, offset show_end - offset show_str
+        cld
+        rep movsb       ;ds:si的字节搬到es:di
+
+        ;设置中断向量表
+        mov ax, 0
         mov es, ax
+        mov word ptr es:[0*4], 200h
+        mov word ptr es:[0*4+2], 0
 
-        mov di, 12 * 160 + 36 * 2 ;设置es:di指向显存空间的中间位置
-
-        mov cx, 9
-s:      
-        mov al, [si]
-        mov es:[di], al
-        inc si
-        add di, 2
-        loop s
-
-
+        ;执行除法
+        mov ax, 1000h
+        mov bh, 1
+        div bh
         mov ax, 4c00h
         int 21h
-do0end: nop
 
-codeseg ends
+show_str:
+        mov ax, data
+        mov ds, ax
+        lea dx, string
+        mov ax, 0900h
+        int 21h
+        mov ax, 4c00h
+        int 21h
+show_end:
+        nop        
+code ends
 end start
