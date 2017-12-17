@@ -97,7 +97,7 @@ data ends
 
 assume cs:code, ds:data
 data segment
-    string db 'hello, world!$'
+    string db 'hello, woxcvrld!$'
 data ends
 
 code segment
