@@ -68,8 +68,8 @@ public class Solution3 {
         for (int i = 0; i < bucketSum; i++) {
             bucket(String.format("%d号水桶", i)).start();
         }
-        // 运行2秒
-        Thread.sleep(2 * 1000);
+        // 运行0.5秒
+        Thread.sleep(500);
         System.exit(0);
     }
 }
