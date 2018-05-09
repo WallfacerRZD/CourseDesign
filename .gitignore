@@ -320,3 +320,9 @@ OpenCover/
 
 # Azure Stream Analytics local run output 
 ASALocalRun/
+
+# Java Class
+*.class
+
+# IDEA CONFIGURATION
+*.iml
