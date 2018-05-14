@@ -1,11 +1,11 @@
-import java.util.Timer;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.lang.InterruptedException;
 
 /**
+ * 思路:
+ *      桥的南北入口各设置一个值为1的信号量
+ *      每次进入入口请求信号量, 进入桥面后释放
  * @author WallfacerRZD
  * @date 2018/5/10 19:58
  */
@@ -69,4 +69,3 @@ public class Bridge {
         System.exit(0);
     }
 }
-
