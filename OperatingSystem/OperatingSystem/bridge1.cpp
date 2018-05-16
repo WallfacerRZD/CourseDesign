@@ -3,8 +3,9 @@
 
 /*
 * 思路:
-*      桥的南北入口各设置一个值为1的信号量
-*      每次进入入口请求信号量, 进入桥面后释放
+*      桥的南北入口各设置一个条件变量, 一个布尔值, 表示是否有人
+*      每次进入入口检测是否有人, 有人就阻塞在相应的条件变量上
+*      没人就进入入口, 离开入口时唤醒阻塞在这个路口对应的条件变量上的线程
 */
 CONDITION_VARIABLE northEmpty;
 CONDITION_VARIABLE southEmpty;
@@ -13,18 +14,15 @@ bool southFull = false;
 bool northFull = false;
 
 void south2NorthTread() {
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 500; i++) {
 		EnterCriticalSection(&criticalSection);
 		while (southFull) {
 			SleepConditionVariableCS(&southEmpty, &criticalSection, NULL);
 		}
 		southFull = true;
-		//LeaveCriticalSection(&criticalSection);
 
 		std::cout << "进入桥　↑　南\n";
 		std::cout << "通过桥↑　　面\n";
-
-		//EnterCriticalSection(&criticalSection);
 		southFull = false;
 		LeaveCriticalSection(&criticalSection);
 
@@ -35,11 +33,9 @@ void south2NorthTread() {
 			SleepConditionVariableCS(&northEmpty, &criticalSection, NULL);
 		}
 		northFull = true;
-		//LeaveCriticalSection(&criticalSection);
 
 		std::cout << "离开桥　↑　北\n";
 
-		//EnterCriticalSection(&criticalSection);
 		northFull = false;
 		LeaveCriticalSection(&criticalSection);
 
@@ -48,18 +44,15 @@ void south2NorthTread() {
 }
 
 void north2SouthTread() {
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 500; i++) {
 		EnterCriticalSection(&criticalSection);
 		while (northFull) {
 			SleepConditionVariableCS(&northEmpty, &criticalSection, NULL);
 		}
 		northFull = true;
-		//LeaveCriticalSection(&criticalSection);
-
 		std::cout << "进入桥　↓　北\n";
 		std::cout << "通过桥　　↓面\n";
 
-		//EnterCriticalSection(&criticalSection);
 		northFull = false;
 		LeaveCriticalSection(&criticalSection);
 
@@ -70,11 +63,8 @@ void north2SouthTread() {
 			SleepConditionVariableCS(&southEmpty, &criticalSection, NULL);
 		}
 		southFull = true;
-		//LeaveCriticalSection(&criticalSection);
-
 		std::cout << "离开桥　↓　南\n";
 
-		//EnterCriticalSection(&criticalSection);
 		southFull = false;
 		LeaveCriticalSection(&criticalSection);
 
@@ -84,7 +74,6 @@ void north2SouthTread() {
 
 
 int main() {
-	const int threadNum = 10;
 	InitializeConditionVariable(&northEmpty);
 	InitializeConditionVariable(&southEmpty);
 	InitializeCriticalSection(&criticalSection);
