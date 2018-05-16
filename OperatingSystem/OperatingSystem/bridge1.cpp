@@ -14,50 +14,70 @@ bool northFull = false;
 
 void south2NorthTread() {
 	for (int i = 0; i < 1000; i++) {
-		while (southFull) {
-			SleepConditionVariableCS(&southEmpty, NULL, NULL);
-		}
-
 		EnterCriticalSection(&criticalSection);
+		while (southFull) {
+			SleepConditionVariableCS(&southEmpty, &criticalSection, NULL);
+		}
 		southFull = true;
+		//LeaveCriticalSection(&criticalSection);
+
 		std::cout << "进入桥　↑　南\n";
 		std::cout << "通过桥↑　　面\n";
+
+		//EnterCriticalSection(&criticalSection);
 		southFull = false;
 		LeaveCriticalSection(&criticalSection);
+
 		WakeConditionVariable(&southEmpty);
-		while (northFull) {
-			SleepConditionVariableCS(&northEmpty, NULL, NULL);
-		}
+
 		EnterCriticalSection(&criticalSection);
+		while (northFull) {
+			SleepConditionVariableCS(&northEmpty, &criticalSection, NULL);
+		}
 		northFull = true;
+		//LeaveCriticalSection(&criticalSection);
+
 		std::cout << "离开桥　↑　北\n";
+
+		//EnterCriticalSection(&criticalSection);
 		northFull = false;
 		LeaveCriticalSection(&criticalSection);
+
 		WakeConditionVariable(&northEmpty);
 	}
 }
 
 void north2SouthTread() {
 	for (int i = 0; i < 1000; i++) {
-		while (northFull) {
-			SleepConditionVariableCS(&northEmpty, NULL, NULL);
-		}
 		EnterCriticalSection(&criticalSection);
+		while (northFull) {
+			SleepConditionVariableCS(&northEmpty, &criticalSection, NULL);
+		}
 		northFull = true;
+		//LeaveCriticalSection(&criticalSection);
+
 		std::cout << "进入桥　↓　北\n";
 		std::cout << "通过桥　　↓面\n";
+
+		//EnterCriticalSection(&criticalSection);
 		northFull = false;
 		LeaveCriticalSection(&criticalSection);
+
 		WakeConditionVariable(&northEmpty);
 
-		while (southFull) {
-			SleepConditionVariableCS(&southEmpty, NULL, NULL);
-		}
 		EnterCriticalSection(&criticalSection);
+		while (southFull) {
+			SleepConditionVariableCS(&southEmpty, &criticalSection, NULL);
+		}
 		southFull = true;
+		//LeaveCriticalSection(&criticalSection);
+
 		std::cout << "离开桥　↓　南\n";
+
+		//EnterCriticalSection(&criticalSection);
 		southFull = false;
 		LeaveCriticalSection(&criticalSection);
+
 		WakeConditionVariable(&southEmpty);
 	}
 }
@@ -68,18 +88,11 @@ int main() {
 	InitializeConditionVariable(&northEmpty);
 	InitializeConditionVariable(&southEmpty);
 	InitializeCriticalSection(&criticalSection);
-	HANDLE n2Sthreads[threadNum];
-	HANDLE s2Nthreads[threadNum];
-	for (int i = 0; i < threadNum; i++) {
-		n2Sthreads[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)north2SouthTread, NULL, 0, NULL);
-	}
-	for (int i = 0; i < threadNum; i++) {
-		s2Nthreads[i] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)south2NorthTread, NULL, 0, NULL);
-	}
-	for (int i = 0; i < threadNum; i++) {
-		WaitForSingleObject(n2Sthreads[i], INFINITE);
-		WaitForSingleObject(s2Nthreads[i], INFINITE);
-	}
+	HANDLE thread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)north2SouthTread, NULL, 0, NULL);
+	HANDLE thread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)south2NorthTread, NULL, 0, NULL);
+	WaitForSingleObject(thread1, INFINITE);
+	WaitForSingleObject(thread2, INFINITE);
+
 	system("pause");
 	return 0;
 }
