@@ -1,8 +1,12 @@
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 /**
  * @author WallfacerRZD
@@ -21,6 +25,9 @@ public class Test {
                 System.out.println("---------");
                 lock.unlock();
             }).start();
+            Queue queue = new LinkedList();
+            Logger
+            List<List<Integer>> result = new LinkedList<>();
         }
 
     }
