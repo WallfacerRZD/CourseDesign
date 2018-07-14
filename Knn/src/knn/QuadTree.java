@@ -1,6 +1,8 @@
 package knn;
 
-import java.util.ArrayList;
+import knn.computable.Computable;
+import knn.computable.Point;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  * @author WallfacerRZD
  * @date 2018/7/13 14:35
  */
-public class QuadTree {
+public class QuadTree implements Computable {
     private static final int MAX_CAPACITY = 1000;
 
     private final int level;
@@ -16,6 +18,22 @@ public class QuadTree {
     private final Boundary boundary;
 
     private List<Point> points;
+
+    public QuadTree getNorthWest() {
+        return northWest;
+    }
+
+    public QuadTree getNorthEast() {
+        return northEast;
+    }
+
+    public QuadTree getSouthWest() {
+        return southWest;
+    }
+
+    public QuadTree getSouthEast() {
+        return southEast;
+    }
 
     private QuadTree northWest;
 
@@ -125,5 +143,34 @@ public class QuadTree {
         }
         split();
         insertIntoChild(point);
+    }
+
+    @Override
+    public double compute(Point point) {
+        double xMin = boundary.getxMin();
+        double xMax = boundary.getxMax();
+        double yMin = boundary.getyMin();
+        double yMax = boundary.getyMax();
+
+        if (boundary.inRange(point)) {
+            return 0.0;
+        }
+        double x = point.getX();
+        double y = point.getY();
+        if (x >= xMin && x <= xMax) {
+            return Double.min(Math.abs(y - yMax), Math.abs(yMin - y));
+        } else if (y >= yMin && y <= yMax) {
+            return Double.min(Math.abs(x - xMax), Math.abs(xMin - x));
+        } else {
+            if (x < xMin && y > yMax) {
+                return Math.sqrt((x - xMin) * (x - xMin) + (y - yMax) * (y - yMax));
+            } else if (x > xMax && y > yMax) {
+                return Math.sqrt((x - xMax) * (x - xMax) + (y - yMax) * (y - yMax));
+            } else if (x < xMin && y < yMin) {
+                return Math.sqrt((x - xMin) * (x - xMin) + (y - yMin) * (y - yMin));
+            } else {
+                return Math.sqrt((x - xMax) * (x - xMax) + (y - yMin) * (y - yMin));
+            }
+        }
     }
 }

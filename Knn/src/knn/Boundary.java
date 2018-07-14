@@ -1,10 +1,12 @@
 package knn;
 
+import knn.computable.Point;
+
 /**
  * @author WallfacerRZD
  * @date 2018/7/13 15:49
  */
-class Boundary {
+public class Boundary {
     public Boundary(double xMin, double xMax, double yMin, double yMax) {
         this.xMin = xMin;
         this.xMax = xMax;
