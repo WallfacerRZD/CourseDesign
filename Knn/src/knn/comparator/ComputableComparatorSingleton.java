@@ -14,13 +14,13 @@ public final class ComputableComparatorSingleton {
 
     }
 
-    public static Point source = new Point(34.124324798583984,-118.10047149658203);
+    public static Point source = new Point(34.12685485839844,-118.08755493164062);
 
     private static class ComparatorHolder {
         private static Comparator<Computable> instance = (o1, o2) -> {
             double distance1 = o1.compute(source);
             double distance2 = o2.compute(source);
-            return -Double.compare(distance1, distance2);
+            return Double.compare(distance1, distance2);
         };
     }
 
