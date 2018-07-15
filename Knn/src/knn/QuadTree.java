@@ -1,10 +1,12 @@
 package knn;
 
+import knn.comparator.ComputableComparatorSingleton;
 import knn.computable.Computable;
 import knn.computable.Point;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * @author WallfacerRZD
@@ -41,6 +43,15 @@ public class QuadTree implements Computable {
 
     public QuadTree getSouthEast() {
         return southEast;
+    }
+
+    public QuadTree(int level, Boundary boundary, List<Point> pointsData) {
+        this.level = level;
+        this.boundary = boundary;
+        points = new LinkedList<>();
+        for (Point point : pointsData) {
+            insert(point);
+        }
     }
 
     public QuadTree(int level, Boundary boundary) {
@@ -143,6 +154,32 @@ public class QuadTree implements Computable {
         }
         split();
         insertIntoChild(point);
+    }
+
+    public PriorityQueue<Point> searchKnnPoints() {
+        PriorityQueue<QuadTree> quadTreePQ = new PriorityQueue<>(
+                ComputableComparatorSingleton.instance()
+        );
+        PriorityQueue<Point> knnPoints = new PriorityQueue<>(
+                ComputableComparatorSingleton.instance()
+        );
+        quadTreePQ.offer(this);
+        while (!quadTreePQ.isEmpty()) {
+            QuadTree tree = quadTreePQ.poll();
+            if (tree != null) {
+                if (!tree.isLeaf()) {
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthWest());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthEast());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthEast());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthWest());
+                } else {
+                    for (Point point : tree.getPoints()) {
+                        Utils.fixedSizeOffer(knnPoints, point);
+                    }
+                }
+            }
+        }
+        return knnPoints;
     }
 
     @Override

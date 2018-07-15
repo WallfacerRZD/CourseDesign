@@ -5,6 +5,7 @@ import knn.computable.Point;
 /**
  * @author WallfacerRZD
  * @date 2018/7/13 15:49
+ * 平面的边界
  */
 public class Boundary {
     private final double xMin;

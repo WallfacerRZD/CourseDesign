@@ -16,7 +16,7 @@ import java.util.PriorityQueue;
  * @date 2018/7/13 14:35
  */
 public class Knn {
-    private static List<Point> points = new LinkedList<>();
+    private static List<Point> PointsData = new LinkedList<>();
 
     private static double xMin = Double.MAX_VALUE;
 
@@ -38,7 +38,7 @@ public class Knn {
                 xMax = x > xMax ? x : xMax;
                 yMin = y > yMin ? yMin : y;
                 yMax = y > yMax ? y : yMax;
-                points.add(new Point(x, y));
+                PointsData.add(new Point(x, y));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,49 +47,30 @@ public class Knn {
 
     public static void main(String[] args) {
         readData();
-        QuadTree root = new QuadTree(0, new Boundary(xMin, xMax, yMin, yMax));
-        PriorityQueue<Point> knnPoints1 = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
-        );
-        for (Point point : points) {
-            root.insert(point);
-            // Utils.fixedSizeOffer(knnPoints1, point);
-        }
-        PriorityQueue<QuadTree> quadTreePQ = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
-        );
-        PriorityQueue<Point> knnPoints = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
-        );
+        QuadTree quadTree = new QuadTree(0, new Boundary(xMin, xMax, yMin, yMax), PointsData);
+
+
         double beginTime = System.currentTimeMillis();
-        quadTreePQ.offer(root);
-        while (!quadTreePQ.isEmpty()) {
-            QuadTree tree = quadTreePQ.poll();
-            if (tree != null) {
-                if (!tree.isLeaf()) {
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthWest());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthEast());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthEast());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthWest());
-                } else {
-                    for (Point point : tree.getPoints()) {
-                        Utils.fixedSizeOffer(knnPoints, point);
-                    }
-                }
-            }
-        }
-        System.out.println(System.currentTimeMillis() - beginTime);
+        PriorityQueue<Point> quadTreeKNNPoints = quadTree.searchKnnPoints();
+        System.out.println("Quad-Tree KNN: " + (System.currentTimeMillis() - beginTime) + "ms");
+
+
+        PriorityQueue<Point> iterationKNNPoints = new PriorityQueue<>(
+                ComputableComparatorSingleton.instance()
+        );
         beginTime = System.currentTimeMillis();
-        for (Point point : points) {
-            Utils.fixedSizeOffer(knnPoints1, point);
+        for (Point point : PointsData) {
+            Utils.fixedSizeOffer(iterationKNNPoints, point);
         }
-        System.out.println(System.currentTimeMillis() - beginTime);
-/*        System.out.println(knnPoints);
-        System.out.println(knnPoints1);*/
-        while (!knnPoints.isEmpty() && !knnPoints1.isEmpty()) {
+        System.out.println("Iteration KNN: " + (System.currentTimeMillis() - beginTime) + "ms");
+
+        System.out.println(iterationKNNPoints);
+        System.out.println(quadTreeKNNPoints);
+        // 测试两种算法得到的结果是否相同
+        while (!quadTreeKNNPoints.isEmpty() && !iterationKNNPoints.isEmpty()) {
             Point source = ComputableComparatorSingleton.source;
-            Point point = knnPoints.poll();
-            Point point1 = knnPoints1.poll();
+            Point point = quadTreeKNNPoints.poll();
+            Point point1 = iterationKNNPoints.poll();
             assert (Double.compare(source.compute(point), source.compute(point1)) == 0);
         }
     }
