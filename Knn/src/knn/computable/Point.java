@@ -4,7 +4,11 @@ package knn.computable;
  * @author WallfacerRZD
  * @date 2018/7/13 15:33
  */
-public class Point implements Computable{
+public class Point implements Computable {
+    private final double x;
+
+    private final double y;
+
     public double getX() {
         return x;
     }
@@ -23,17 +27,15 @@ public class Point implements Computable{
         return "(" + x + "," + y + ")";
     }
 
-    private final double x;
-
-    private final double y;
-
     @Override
     public double compute(Point point) {
+        if (point == null) {
+            return Double.POSITIVE_INFINITY;
+        }
         double otherX = point.getX();
         double otherY = point.getY();
         return Math.sqrt(
-                (this.x - otherX) * (this.x - otherX) +
-                (this.y - otherY) * (this.y - otherY)
+                (this.x - otherX) * (this.x - otherX) + (this.y - otherY) * (this.y - otherY)
         );
     }
 }

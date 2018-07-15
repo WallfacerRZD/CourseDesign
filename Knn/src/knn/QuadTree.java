@@ -19,6 +19,14 @@ public class QuadTree implements Computable {
 
     private List<Point> points;
 
+    private QuadTree northWest;
+
+    private QuadTree northEast;
+
+    private QuadTree southWest;
+
+    private QuadTree southEast;
+
     public QuadTree getNorthWest() {
         return northWest;
     }
@@ -34,14 +42,6 @@ public class QuadTree implements Computable {
     public QuadTree getSouthEast() {
         return southEast;
     }
-
-    private QuadTree northWest;
-
-    private QuadTree northEast;
-
-    private QuadTree southWest;
-
-    private QuadTree southEast;
 
     public QuadTree(int level, Boundary boundary) {
         this.level = level;
@@ -147,6 +147,9 @@ public class QuadTree implements Computable {
 
     @Override
     public double compute(Point point) {
+        if (point == null) {
+            return Double.POSITIVE_INFINITY;
+        }
         double xMin = boundary.getxMin();
         double xMax = boundary.getxMax();
         double yMin = boundary.getyMin();

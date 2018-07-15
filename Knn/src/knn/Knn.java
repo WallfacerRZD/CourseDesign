@@ -48,27 +48,29 @@ public class Knn {
     public static void main(String[] args) {
         readData();
         QuadTree root = new QuadTree(0, new Boundary(xMin, xMax, yMin, yMax));
+        PriorityQueue<Point> knnPoints1 = new PriorityQueue<>(
+                ComputableComparatorSingleton.instance()
+        );
         for (Point point : points) {
             root.insert(point);
+            // Utils.fixedSizeOffer(knnPoints1, point);
         }
-
-        PriorityQueue<QuadTree> quadTrees = new PriorityQueue<>(
-                5,
+        PriorityQueue<QuadTree> quadTreePQ = new PriorityQueue<>(
                 ComputableComparatorSingleton.instance()
         );
         PriorityQueue<Point> knnPoints = new PriorityQueue<>(
-                5,
                 ComputableComparatorSingleton.instance()
         );
-        quadTrees.offer(root);
-        while (!quadTrees.isEmpty()) {
-            QuadTree tree = quadTrees.poll();
+        double beginTime = System.currentTimeMillis();
+        quadTreePQ.offer(root);
+        while (!quadTreePQ.isEmpty()) {
+            QuadTree tree = quadTreePQ.poll();
             if (tree != null) {
                 if (!tree.isLeaf()) {
-                    Utils.fixedSizeOffer(quadTrees, tree.getNorthWest());
-                    Utils.fixedSizeOffer(quadTrees, tree.getNorthEast());
-                    Utils.fixedSizeOffer(quadTrees, tree.getSouthEast());
-                    Utils.fixedSizeOffer(quadTrees, tree.getSouthWest());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthWest());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthEast());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthEast());
+                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthWest());
                 } else {
                     for (Point point : tree.getPoints()) {
                         Utils.fixedSizeOffer(knnPoints, point);
@@ -76,6 +78,19 @@ public class Knn {
                 }
             }
         }
-        System.out.println(knnPoints);
+        System.out.println(System.currentTimeMillis() - beginTime);
+        beginTime = System.currentTimeMillis();
+        for (Point point : points) {
+            Utils.fixedSizeOffer(knnPoints1, point);
+        }
+        System.out.println(System.currentTimeMillis() - beginTime);
+/*        System.out.println(knnPoints);
+        System.out.println(knnPoints1);*/
+        while (!knnPoints.isEmpty() && !knnPoints1.isEmpty()) {
+            Point source = ComputableComparatorSingleton.source;
+            Point point = knnPoints.poll();
+            Point point1 = knnPoints1.poll();
+            assert (Double.compare(source.compute(point), source.compute(point1)) == 0);
+        }
     }
 }

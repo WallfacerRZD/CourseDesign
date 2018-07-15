@@ -7,6 +7,14 @@ import knn.computable.Point;
  * @date 2018/7/13 15:49
  */
 public class Boundary {
+    private final double xMin;
+
+    private final double xMax;
+
+    private final double yMin;
+
+    private final double yMax;
+
     public Boundary(double xMin, double xMax, double yMin, double yMax) {
         this.xMin = xMin;
         this.xMax = xMax;
@@ -38,12 +46,4 @@ public class Boundary {
     public double getyMax() {
         return yMax;
     }
-
-    private final double xMin;
-
-    private final double xMax;
-
-    private final double yMin;
-
-    private final double yMax;
 }

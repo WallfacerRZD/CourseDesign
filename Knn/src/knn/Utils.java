@@ -17,7 +17,7 @@ public final class Utils {
         if (queue.size() >= K) {
             E oldElement = queue.poll();
             if (oldElement != null) {
-                if (ComputableComparatorSingleton.instance().compare(oldElement, newElement) < 1) {
+                if (ComputableComparatorSingleton.instance().compare(oldElement, newElement) >= 0) {
                     queue.offer(oldElement);
                 } else {
                     queue.offer(newElement);
