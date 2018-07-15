@@ -1,5 +1,6 @@
-package knn;
+package knn.quadtree;
 
+import knn.Utils;
 import knn.comparator.ComputableComparatorSingleton;
 import knn.computable.Computable;
 import knn.computable.Point;

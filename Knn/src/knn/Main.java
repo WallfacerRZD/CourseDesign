@@ -2,6 +2,8 @@ package knn;
 
 import knn.comparator.ComputableComparatorSingleton;
 import knn.computable.Point;
+import knn.quadtree.Boundary;
+import knn.quadtree.QuadTree;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

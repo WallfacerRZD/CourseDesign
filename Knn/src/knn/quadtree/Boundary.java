@@ -1,4 +1,4 @@
-package knn;
+package knn.quadtree;
 
 import knn.computable.Point;
 
