@@ -158,20 +158,29 @@ public class QuadTree implements Computable {
 
     public PriorityQueue<Point> searchKnnPoints() {
         PriorityQueue<QuadTree> quadTreePQ = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
+                ComputableComparatorSingleton.quadTreeComparatorInstance()
         );
         PriorityQueue<Point> knnPoints = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
+                ComputableComparatorSingleton.pointComparatorInstance()
         );
         quadTreePQ.offer(this);
         while (!quadTreePQ.isEmpty()) {
             QuadTree tree = quadTreePQ.poll();
             if (tree != null) {
                 if (!tree.isLeaf()) {
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthWest());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getNorthEast());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthEast());
-                    Utils.fixedSizeOffer(quadTreePQ, tree.getSouthWest());
+                    Point source = ComputableComparatorSingleton.source;
+                    Point lowestScorePoint = knnPoints.peek();
+                    double minDistanceBetweenPointAndBoundary = tree.compute(source);
+                    double lowestScoreDistanceInKnn = source.compute(lowestScorePoint);
+                    if (knnPoints.size() == Utils.POINT_K &&
+                            minDistanceBetweenPointAndBoundary > lowestScoreDistanceInKnn) {
+                        break;
+                    } else {
+                        quadTreePQ.offer(tree.getNorthWest());
+                        quadTreePQ.offer(tree.getNorthEast());
+                        quadTreePQ.offer(tree.getSouthEast());
+                        quadTreePQ.offer(tree.getSouthWest());
+                    }
                 } else {
                     for (Point point : tree.getPoints()) {
                         Utils.fixedSizeOffer(knnPoints, point);

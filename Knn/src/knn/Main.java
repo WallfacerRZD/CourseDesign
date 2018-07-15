@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  * @author WallfacerRZD
  * @date 2018/7/13 14:35
  */
-public class Knn {
+public class Main {
     private static List<Point> PointsData = new LinkedList<>();
 
     private static double xMin = Double.MAX_VALUE;
@@ -27,8 +27,10 @@ public class Knn {
     private static double yMax = -Double.MAX_VALUE;
 
     private static void readData() {
+        //final String fileName = "F:\\_projects\\CourseDesign\\Main\\src\\knn\\la_points(big).txt";
+        final String fileName = "F:\\_projects\\CourseDesign\\Knn\\src\\knn\\la_points.txt";
         try (BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(new FileInputStream("F:\\_projects\\CourseDesign\\Knn\\src\\knn\\la_points.txt")))) {
+                new InputStreamReader(new FileInputStream(fileName)))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] data = line.split(",");
@@ -56,7 +58,7 @@ public class Knn {
 
 
         PriorityQueue<Point> iterationKNNPoints = new PriorityQueue<>(
-                ComputableComparatorSingleton.instance()
+                ComputableComparatorSingleton.pointComparatorInstance()
         );
         beginTime = System.currentTimeMillis();
         for (Point point : PointsData) {
