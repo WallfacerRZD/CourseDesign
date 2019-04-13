@@ -37,7 +37,7 @@ FILE* listing;
 FILE* code;
 
 /* allocate and set tracing flags */
-int EchoSource = FALSE;
+int EchoSource = TRUE;
 int TraceScan = TRUE;
 int TraceParse = FALSE;
 int TraceAnalyze = FALSE;
@@ -64,7 +64,7 @@ main(int argc, char* argv[]) {
     strcpy(outputFile, argv[1]);
     changePostFix(outputFile);
     listing = fopen(outputFile, "w"); /* send listing to txt */
-    fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
+    fprintf(listing, "TINY COMPILATION:\n");
 #if NO_PARSE
     while (getToken() != ENDFILE)
         ;

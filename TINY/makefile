@@ -10,8 +10,8 @@ CFLAGS =
 
 OBJS = main.o util.o scan.o parse.o symtab.o analyze.o code.o cgen.o
 
-tiny.exe: $(OBJS)
-	$(CC) $(CFLAGS) -o tiny.exe $(OBJS)
+tiny: $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o tiny
 
 main.o: main.c globals.h util.h scan.h parse.h analyze.h cgen.h
 	$(CC) $(CFLAGS) -c main.c
@@ -50,12 +50,12 @@ clean:
 	-rm cgen.o
 	-rm tm.o
 
-tm.exe: tm.c
+tm: tm.c
 	$(CC) $(CFLAGS) -etm tm.c
 
-tiny: tiny.exe
+tiny: tiny
 
-tm: tm.exe
+tm: tm
 
 all: tiny tm
 

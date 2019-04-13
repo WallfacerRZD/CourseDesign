@@ -36,6 +36,7 @@ static int getNextChar(void) {
             linepos = 0;
             return lineBuf[linepos++];
         } else {
+            fprintf(listing, "%4d: EOF\n", lineno);
             EOF_flag = TRUE;
             return EOF;
         }
@@ -185,7 +186,9 @@ TokenType getToken(void) { /* index for storing into tokenString */
         }
     }
     if (TraceScan) {
-        fprintf(listing, "\t%d: ", lineno);
+        if (currentToken != ENDFILE) {
+            fprintf(listing, "\t%d: ", lineno);
+        }
         printToken(currentToken, tokenString);
     }
     return currentToken;
