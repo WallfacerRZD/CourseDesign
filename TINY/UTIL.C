@@ -175,3 +175,10 @@ void printTree( TreeNode * tree )
   }
   UNINDENT;
 }
+
+void changePostFix(char * str)  {
+    int len = strlen(str);
+    *(str + len - 3) = 't';
+    *(str + len - 2) = 'x';
+    *(str + len - 1) = 't';
+}

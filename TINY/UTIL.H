@@ -33,4 +33,7 @@ char * copyString( char * );
  */
 void printTree( TreeNode * );
 
+
+void changePostFix(char * str);
+
 #endif

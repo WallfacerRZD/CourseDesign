@@ -60,7 +60,10 @@ main(int argc, char* argv[]) {
         exit(1);
     }
     // listing = stdout; /* send listing to screen */
-    listing = fopen(strcat(pgm, "-result.txt"), "w"); /* send listing to txt */
+    char outputFile[50];
+    strcpy(outputFile, argv[1]);
+    changePostFix(outputFile);
+    listing = fopen(outputFile, "w"); /* send listing to txt */
     fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
 #if NO_PARSE
     while (getToken() != ENDFILE)
