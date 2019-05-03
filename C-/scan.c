@@ -233,6 +233,8 @@ TokenType getToken(void) { /* index for storing into tokenString */
                     state = IN_COMMENT;
                     save = FALSE;
                 } else {
+                    currentToken = OVER;
+                    ungetNextChar();
                     state = DONE;
                 }
                 break;
@@ -248,6 +250,8 @@ TokenType getToken(void) { /* index for storing into tokenString */
                 save = FALSE;
                 if (c == '/') {
                     state = START;
+                    // 去掉注释开始的'/'
+                    tokenStringIndex = 0;
                 } else {
                     if (c == '*') {
                         // do nothing

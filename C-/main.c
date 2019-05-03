@@ -64,7 +64,7 @@ main(int argc, char* argv[]) {
     strcpy(outputFile, argv[1]);
     changePostFix(outputFile);
     listing = fopen(outputFile, "w"); /* send listing to txt */
-    fprintf(listing, "TINY COMPILATION:\n");
+    fprintf(listing, "CMINUS COMPILATION:\n");
     while (getToken() != ENDFILE)
         ;
     fclose(source);

@@ -7,7 +7,7 @@
 
 #ifndef _UTIL_H_
 #define _UTIL_H_
-
+#include "globals.h"
 /* Procedure printToken prints a token 
  * and its lexeme to the listing file
  */

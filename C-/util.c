@@ -23,35 +23,26 @@ void printToken(TokenType token, const char *tokenString) {
             fprintf(listing, "reserved word: %s\n", tokenString);
             break;
         case ASSIGN:
-            fprintf(listing, "=\n");
-            break;
-        case LT:
-            fprintf(listing, "<\n");
-            break;
         case EQ:
-            fprintf(listing, "=\n");
-            break;
-        case LPAREN:
-            fprintf(listing, "(\n");
-            break;
-        case RPAREN:
-            fprintf(listing, ")\n");
-            break;
-        case SEMI:
-            fprintf(listing, ";\n");
-            break;
+        case NEQ:
+        case LT:
+        case LT_EQ:
+        case GT:
+        case GT_EQ:
         case PLUS:
-            fprintf(listing, "+\n");
-            break;
         case MINUS:
-            fprintf(listing, "-\n");
-            break;
         case TIMES:
-            fprintf(listing, "*\n");
-            break;
         case OVER:
-            fprintf(listing, "/\n");
-            break;
+        case LPAREN:
+        case RPAREN:
+        case L_SQUARE:
+        case R_SQUARE:
+        case L_CURLY:
+        case R_CURLY:
+        case COMMA:
+        case SEMI:
+          fprintf(listing, "%s\n", tokenString);
+          break;
         case ENDFILE:
             break;
         case NUM:
@@ -191,7 +182,8 @@ void printTree(TreeNode *tree) {
 
 void changePostFix(char *str) {
     int len = strlen(str);
-    *(str + len - 3) = 't';
-    *(str + len - 2) = 'x';
-    *(str + len - 1) = 't';
+    *(str + len - 2) = 't';
+    *(str + len - 1) = 'x';
+    *(str + len) = 't';
+    *(str + len + 1) = '\0';
 }
